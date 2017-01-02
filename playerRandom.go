@@ -7,11 +7,12 @@ type PlayerRandom struct {
 	r           *rand.Rand
 	funds       int
 	stocksOwned [HotelCount]int
+	piecesHeld  []Piece
 }
 
 // NewPlayerRandom creates a new PlayerRandom that selects all choices at random
-func NewPlayerRandom(r *rand.Rand) PlayerRandom {
-	return PlayerRandom{r: r, funds: StartingMoney}
+func NewPlayerRandom(r *rand.Rand) *PlayerRandom {
+	return &PlayerRandom{r: r, funds: StartingMoney, piecesHeld: []Piece{}}
 }
 
 // GetFunds gets the current funds of the player
@@ -32,12 +33,15 @@ func (p *PlayerRandom) GetStocks() [HotelCount]int {
 // BuyStocks picks a random set of available stocks and buys as many as possible
 func (p *PlayerRandom) BuyStocks(g *Game) []Hotel {
 	bought := []Hotel{}
+	startingAvailable := make([]int, HotelCount)
+
+	copy(startingAvailable, g.AvailableStocks[:])
 
 	for i := 0; i < BuyStocksPerTurn; i++ {
 		available := []Hotel{}
 		var prices [HotelCount]int
 
-		for h, s := range g.AvailableStocks {
+		for h, s := range startingAvailable {
 			if s > 0 {
 				prices[h] = g.GetWorth(Hotel(h)).PricePerStock
 
@@ -54,6 +58,8 @@ func (p *PlayerRandom) BuyStocks(g *Game) []Hotel {
 
 			p.funds -= prices[choice]
 			p.stocksOwned[choice]++
+
+			startingAvailable[choice]--
 
 			bought = append(bought, choice)
 		}
@@ -72,4 +78,26 @@ func (p *PlayerRandom) Merge(g *Game, choices []Hotel) Hotel {
 func (p *PlayerRandom) Create(g *Game, rowPlayed int, colPlayed int) Hotel {
 	// assume there is at least one available to have gotten here
 	return g.AvailableChains[p.r.Intn(len(g.AvailableChains))]
+}
+
+// Draw will draw a piece from the piece bag and hold it
+func (p *PlayerRandom) Draw(g *Game) {
+	p.piecesHeld = append(p.piecesHeld, g.PieceBag.Draw())
+}
+
+// PlayTile selects a random held tile to play
+func (p *PlayerRandom) PlayTile(g *Game) Piece {
+	l := len(p.piecesHeld)
+	i := p.r.Intn(l)
+	choice := p.piecesHeld[i]
+	p.piecesHeld[i] = p.piecesHeld[l-1]
+	p.piecesHeld = p.piecesHeld[:l-1]
+	return choice
+}
+
+// Sell randomly chooses how much stock to hold, sell, or trade on mergers
+func (p *PlayerRandom) Sell(g *Game, defunct Hotel, acquiredBy Hotel) SellInfo {
+	s := SellInfo{}
+
+	return s
 }

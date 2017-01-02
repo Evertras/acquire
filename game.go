@@ -16,6 +16,7 @@ type Game struct {
 	AvailableStocks   [HotelCount]int
 	AvailableChains   []Hotel
 	CurrentChainSizes [HotelCount]int
+	PieceBag          *PieceCollection
 }
 
 // GetWorth returns the current stock price and bonuses for a given Hotel

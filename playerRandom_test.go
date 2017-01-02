@@ -5,6 +5,12 @@ import (
 	"testing"
 )
 
+func TestPlayerRandomFitsInterface(t *testing.T) {
+	var p Player
+	p = NewPlayerRandom(rand.New(rand.NewSource(0)))
+	p.GetFunds()
+}
+
 func TestPlayerRandomStartsWithCorrectFunds(t *testing.T) {
 	p := NewPlayerRandom(rand.New(rand.NewSource(0)))
 
@@ -28,6 +34,18 @@ func TestPlayerRandomAddsFunds(t *testing.T) {
 
 	if afterFunds != expectedFunds {
 		t.Errorf("Funds not added correctly; got %d but expected %d (%d + %d)", afterFunds, expectedFunds, startingFunds, toAdd)
+	}
+}
+
+func TestPlayerRandomStartsWithNoStocksOwned(t *testing.T) {
+	p := NewPlayerRandom(rand.New(rand.NewSource(0)))
+
+	stocks := p.GetStocks()
+
+	for h, s := range stocks {
+		if s != 0 {
+			t.Errorf("Started with %d stocks in %v", s, h)
+		}
 	}
 }
 
@@ -147,5 +165,42 @@ func TestPlayerRandomCreate(t *testing.T) {
 
 	if created != HotelAmerican && created != HotelLuxor {
 		t.Errorf("Somehow created a hotel chain that wasn't available: %c", GetHotelInitial(created))
+	}
+}
+
+func TestPlayerRandomDrawsUniqueTiles(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+
+	// Churn through a ton of cases with the same RNG generator to try as many
+	// possible cases as sanely possible via brute force
+	for i := 0; i < 100000; i++ {
+		p := NewPlayerRandom(r)
+		g := &Game{
+			PieceBag: NewPieceCollection(r),
+		}
+
+		startingCount := BoardWidth * BoardHeight
+
+		if len(g.PieceBag.Pieces) != startingCount {
+			t.Errorf("Started with %d pieces, expected %d", len(g.PieceBag.Pieces), startingCount)
+		}
+
+		drawCount := 10
+
+		for j := 0; j < drawCount; j++ {
+			p.Draw(g)
+		}
+
+		if len(p.piecesHeld) != drawCount {
+			t.Errorf("Wanted to be holding %d but instead holding %d", drawCount, len(p.piecesHeld))
+		}
+
+		for i1, p1 := range p.piecesHeld {
+			for i2, p2 := range p.piecesHeld {
+				if i1 != i2 && p2 == p1 {
+					t.Errorf("Found duplicate tile being held")
+				}
+			}
+		}
 	}
 }

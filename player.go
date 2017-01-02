@@ -1,15 +1,22 @@
 package acquire
 
+// SellInfo contains information on how a Player wishes to sell their stocks
+type SellInfo struct {
+	Sell  int
+	Trade int
+	Hold  int
+}
+
 // Player is anything that can make decisions on a Game based on its current
 // State and Board
 type Player interface {
 	// Stateful actions
-	PlayTile(g *Game) (row int, col int)
+	PlayTile(g *Game) Piece
 	BuyStocks(g *Game) []Hotel
 	Merge(g *Game, choices []Hotel) Hotel
-	Sell(g *Game, defunct Hotel, acquiredBy Hotel) (sell int, trade int, hold int)
+	Sell(g *Game, defunct Hotel, acquiredBy Hotel) SellInfo
 	Create(g *Game, rowPlayed int, colPlayed int) Hotel
-	CashOut(g *Game)
+	Draw(g *Game)
 
 	// Funds
 	GetFunds() int
