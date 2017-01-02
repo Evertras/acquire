@@ -9,8 +9,12 @@ type Player interface {
 	Merge(g *Game, choices []Hotel) Hotel
 	Sell(g *Game, defunct Hotel, acquiredBy Hotel) (sell int, trade int, hold int)
 	Create(g *Game, rowPlayed int, colPlayed int) Hotel
-	EndGame(g *Game)
+	CashOut(g *Game)
 
-	// Informational
+	// Funds
 	GetFunds() int
+	AddFunds(funds int)
+
+	// Stocks the Player owns
+	GetStocks() [HotelCount]int
 }

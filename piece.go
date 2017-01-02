@@ -34,8 +34,8 @@ func (p *PieceCollection) Draw() Piece {
 	i := p.r.Intn(l)
 	drawn := p.Pieces[i]
 
+	// Swap whatever's last into what we drew, order doesn't matter
 	p.Pieces[i] = p.Pieces[l-1]
-
 	p.Pieces = p.Pieces[:l-1]
 
 	return drawn

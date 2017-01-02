@@ -4,29 +4,32 @@ package acquire
 type Hotel int
 
 const (
-	// Empty square
-	Empty Hotel = iota
+	// HotelEmpty square
+	HotelEmpty Hotel = iota
 
-	// Tower hotels
-	Tower
+	// HotelTower hotels
+	HotelTower
 
-	// Luxor hotels
-	Luxor
+	// HotelLuxor hotels
+	HotelLuxor
 
-	// American hotels
-	American
+	// HotelAmerican hotels
+	HotelAmerican
 
-	// Worldwide hotels
-	Worldwide
+	// HotelWorldwide hotels
+	HotelWorldwide
 
-	// Festival hotels
-	Festival
+	// HotelFestival hotels
+	HotelFestival
 
-	// Imperial hotels
-	Imperial
+	// HotelImperial hotels
+	HotelImperial
 
-	// Continental hotels
-	Continental
+	// HotelContinental hotels
+	HotelContinental
+
+	// HotelCount is how many hotel types there are, useful for sizing arrays
+	HotelCount = 7
 )
 
 var hotelInitials = [11]byte{
@@ -71,9 +74,9 @@ var hotelWorths = [11]HotelWorth{
 func GetWorth(hotel Hotel, chainSize int) HotelWorth {
 	offset := 0
 
-	if hotel == American || hotel == Worldwide || hotel == Festival {
+	if hotel == HotelAmerican || hotel == HotelWorldwide || hotel == HotelFestival {
 		offset = 1
-	} else if hotel == Imperial || hotel == Continental {
+	} else if hotel == HotelImperial || hotel == HotelContinental {
 		offset = 2
 	}
 

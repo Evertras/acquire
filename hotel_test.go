@@ -7,14 +7,14 @@ func TestInitials(t *testing.T) {
 		h Hotel
 		i byte
 	}{
-		{Empty, '-'},
-		{Tower, 'T'},
-		{Luxor, 'L'},
-		{American, 'A'},
-		{Worldwide, 'W'},
-		{Festival, 'F'},
-		{Imperial, 'I'},
-		{Continental, 'C'},
+		{HotelEmpty, '-'},
+		{HotelTower, 'T'},
+		{HotelLuxor, 'L'},
+		{HotelAmerican, 'A'},
+		{HotelWorldwide, 'W'},
+		{HotelFestival, 'F'},
+		{HotelImperial, 'I'},
+		{HotelContinental, 'C'},
 	}
 
 	for _, c := range cases {
@@ -35,9 +35,9 @@ type worthCase struct {
 func TestWorth(t *testing.T) {
 	cases := []worthCase{}
 
-	tier1 := []Hotel{Tower, Luxor}
-	tier2 := []Hotel{American, Worldwide, Festival}
-	tier3 := []Hotel{Imperial, Continental}
+	tier1 := []Hotel{HotelTower, HotelLuxor}
+	tier2 := []Hotel{HotelAmerican, HotelWorldwide, HotelFestival}
+	tier3 := []Hotel{HotelImperial, HotelContinental}
 
 	for s := 2; s < 45; s++ {
 		var offset int
