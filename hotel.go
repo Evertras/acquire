@@ -4,8 +4,11 @@ package acquire
 type Hotel int
 
 const (
+	// Empty square
+	Empty Hotel = iota
+
 	// Tower hotels
-	Tower Hotel = iota
+	Tower
 
 	// Luxor hotels
 	Luxor
@@ -27,6 +30,7 @@ const (
 )
 
 var hotelInitials = [11]byte{
+	'-',
 	'T',
 	'L',
 	'A',

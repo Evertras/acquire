@@ -7,10 +7,14 @@ func TestInitials(t *testing.T) {
 		h Hotel
 		i byte
 	}{
+		{Empty, '-'},
 		{Tower, 'T'},
 		{Luxor, 'L'},
 		{American, 'A'},
 		{Worldwide, 'W'},
+		{Festival, 'F'},
+		{Imperial, 'I'},
+		{Continental, 'C'},
 	}
 
 	for _, c := range cases {
