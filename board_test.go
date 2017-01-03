@@ -40,3 +40,25 @@ func TestPrintEmptyBoard(t *testing.T) {
 		}
 	}
 }
+
+func TestBoardGetNeighbors(t *testing.T) {
+	b := NewBoard()
+
+	middleNeighbors := b.GetNeighbors(Piece{BoardHeight / 2, BoardWidth / 2})
+
+	if len(middleNeighbors) != 4 {
+		t.Errorf("Unexpected number of neighbors in middle: %d (should be 4)", len(middleNeighbors))
+	}
+
+	sideNeighbors := b.GetNeighbors(Piece{0, BoardWidth / 2})
+
+	if len(sideNeighbors) != 3 {
+		t.Errorf("Unexpected number of neighbors on side: %d (should be 3)", len(sideNeighbors))
+	}
+
+	cornerNeighbors := b.GetNeighbors(Piece{0, 0})
+
+	if len(cornerNeighbors) != 2 {
+		t.Errorf("Unexpected number of neighbors in corner: %d (should be 2)", len(cornerNeighbors))
+	}
+}

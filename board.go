@@ -43,3 +43,26 @@ func (b *Board) PrintBoard(out io.Writer) {
 		fmt.Fprintln(out)
 	}
 }
+
+// GetNeighbors returns coordinates of all valid neighbors to the given piece
+func (b *Board) GetNeighbors(p Piece) []Piece {
+	n := make([]Piece, 4)[:0]
+
+	if p.Col > 0 {
+		n = append(n, Piece{Row: p.Row, Col: p.Col - 1})
+	}
+
+	if p.Col < BoardWidth {
+		n = append(n, Piece{Row: p.Row, Col: p.Col + 1})
+	}
+
+	if p.Row > 0 {
+		n = append(n, Piece{Row: p.Row - 1, Col: p.Col})
+	}
+
+	if p.Row < BoardHeight {
+		n = append(n, Piece{Row: p.Row + 1, Col: p.Col})
+	}
+
+	return n
+}
