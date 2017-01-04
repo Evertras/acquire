@@ -59,37 +59,3 @@ func TestNewGame(t *testing.T) {
 		}
 	}
 }
-
-func TestGamePlayTile(t *testing.T) {
-	r, players := genGameParams()
-	g := NewGame(r, players)
-
-	g.Advance()
-
-	emptyCount := 0
-	neutralCount := 0
-
-	for row := 0; row < BoardHeight; row++ {
-		for col := 0; col < BoardWidth; col++ {
-			h := g.Board.Tiles[row][col]
-			if h == HotelEmpty {
-				emptyCount++
-			} else if h == HotelNeutral {
-				neutralCount++
-			} else {
-				t.Errorf("Unexpected hotel type: %d", h)
-			}
-		}
-	}
-
-	targetEmpty := BoardWidth*BoardHeight - 1
-	targetNeutral := 1
-
-	if emptyCount != targetEmpty {
-		t.Errorf("Expected %d empty tiles, but had %d", targetEmpty, emptyCount)
-	}
-
-	if neutralCount != targetNeutral {
-		t.Errorf("Expected %d neutral tiles, but had %d", targetNeutral, neutralCount)
-	}
-}

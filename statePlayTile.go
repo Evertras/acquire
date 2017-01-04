@@ -23,30 +23,23 @@ func (s StatePlayTile) Do(g *Game) State {
 	for _, n := range neighbors {
 		h := g.Board.Tiles[n.Row][n.Col]
 		if h != HotelEmpty {
-			if h != HotelNeutral {
-				if !isNeighboring[h] {
-					isNeighboring[h] = true
-					uniqueNeighbors++
-					fillType = h
-				}
+			if !isNeighboring[h] {
+				isNeighboring[h] = true
+				uniqueNeighbors++
+				fillType = h
 			}
 		}
 	}
 
-	if uniqueNeighbors == 0 {
-		g.Board.Tiles[p.Row][p.Col] = fillType
-	} else if uniqueNeighbors == 1 {
-		if fillType == HotelNeutral {
-
-		} else {
-			g.Board.Tiles[p.Row][p.Col] = fillType
-		}
-	} else {
-		// TODO: Merge
+	if uniqueNeighbors > 1 {
+		return NewStateMerge()
 	}
 
-	// TODO: "paint bucket" neutral tiles if touching ANY, regardless of spread
-	// or merger results
+	g.Board.Tiles[p.Row][p.Col] = fillType
 
-	return nil
+	if uniqueNeighbors == 1 && fillType == HotelNeutral {
+		return NewStateCreate(s.ActivePlayer, p)
+	}
+
+	return NewStateBuy()
 }

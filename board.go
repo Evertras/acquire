@@ -25,7 +25,7 @@ func NewBoard() Board {
 	}
 
 	for i := 0; i < BoardHeight; i++ {
-		row := make([]Hotel, 17)
+		row := make([]Hotel, BoardWidth)
 		b.Tiles = append(b.Tiles, row)
 	}
 
