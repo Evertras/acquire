@@ -23,5 +23,5 @@ type Player interface {
 	AddFunds(funds int)
 
 	// Stocks the Player owns
-	GetStocks() [HotelCount]int
+	GetStocks() [HotelSize]int
 }

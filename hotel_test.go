@@ -8,6 +8,7 @@ func TestInitials(t *testing.T) {
 		i byte
 	}{
 		{HotelEmpty, '-'},
+		{HotelNeutral, '0'},
 		{HotelTower, 'T'},
 		{HotelLuxor, 'L'},
 		{HotelAmerican, 'A'},

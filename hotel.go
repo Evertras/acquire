@@ -4,8 +4,11 @@ package acquire
 type Hotel int
 
 const (
-	// HotelEmpty square
+	// HotelEmpty means a lack of a played tile
 	HotelEmpty Hotel = iota
+
+	// HotelNeutral is a neutral tile
+	HotelNeutral
 
 	// HotelTower hotels
 	HotelTower
@@ -28,12 +31,24 @@ const (
 	// HotelContinental hotels
 	HotelContinental
 
-	// HotelCount is how many hotel types there are, useful for sizing arrays
+	// HotelSize is how many hotel types there are including None and Empty
+	HotelSize = 9
+
+	// HotelFirst is the first numerical constant of an actual hotel chain,
+	// useful in for loops
+	HotelFirst = HotelTower
+
+	// HotelLast is the last numerical constant of an actual hotel chain,
+	// useful in for loops
+	HotelLast = HotelContinental
+
+	// HotelCount is how many actual hotels there are
 	HotelCount = 7
 )
 
-var hotelInitials = [11]byte{
+var hotelInitials = [HotelSize]byte{
 	'-',
+	'0',
 	'T',
 	'L',
 	'A',

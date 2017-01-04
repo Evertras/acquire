@@ -6,7 +6,7 @@ import "math/rand"
 type PlayerRandom struct {
 	r           *rand.Rand
 	funds       int
-	stocksOwned [HotelCount]int
+	stocksOwned [HotelSize]int
 	piecesHeld  []Piece
 }
 
@@ -26,20 +26,20 @@ func (p *PlayerRandom) AddFunds(funds int) {
 }
 
 // GetStocks returns the current counts of what stocks the player owns
-func (p *PlayerRandom) GetStocks() [HotelCount]int {
+func (p *PlayerRandom) GetStocks() [HotelSize]int {
 	return p.stocksOwned
 }
 
 // BuyStocks picks a random set of available stocks and buys as many as possible
 func (p *PlayerRandom) BuyStocks(g *Game) []Hotel {
 	bought := []Hotel{}
-	startingAvailable := make([]int, HotelCount)
+	startingAvailable := make([]int, HotelSize)
 
 	copy(startingAvailable, g.AvailableStocks[:])
 
 	for i := 0; i < BuyStocksPerTurn; i++ {
 		available := []Hotel{}
-		var prices [HotelCount]int
+		var prices [HotelSize]int
 
 		for h, s := range startingAvailable {
 			if s > 0 {
@@ -95,9 +95,22 @@ func (p *PlayerRandom) PlayTile(g *Game) Piece {
 	return choice
 }
 
-// Sell randomly chooses how much stock to hold, sell, or trade on mergers
+// Sell randomly chooses how much stock to hold or sell, will never trade
 func (p *PlayerRandom) Sell(g *Game, defunct Hotel, acquiredBy Hotel) SellInfo {
 	s := SellInfo{}
+
+	owned := p.stocksOwned[defunct]
+
+	for i := 0; i < owned; i++ {
+		choice := p.r.Intn(2)
+
+		switch choice {
+		case 0:
+			s.Hold++
+		case 1:
+			s.Sell++
+		}
+	}
 
 	return s
 }
