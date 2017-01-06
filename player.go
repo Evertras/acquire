@@ -10,7 +10,7 @@ type SellInfo struct {
 // Player is anything that can make decisions on a Game based on its current
 // State and Board
 type Player interface {
-	// Stateful actions
+	// Stateful actions and decisions
 	PlayTile(g *Game) Piece
 	BuyStocks(g *Game) []Hotel
 	Merge(g *Game, choices []Hotel) Hotel

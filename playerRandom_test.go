@@ -214,3 +214,29 @@ func TestPlayerRandomDrawsUniqueTiles(t *testing.T) {
 		}
 	}
 }
+
+func TestPlayerRandomSell(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p})
+
+	defunct := HotelLuxor
+	acquiredBy := HotelAmerican
+	totalOwned := 1000000
+
+	p.stocksOwned[defunct] = totalOwned
+
+	sold := p.Sell(g, defunct, acquiredBy)
+
+	if sold.Hold+sold.Sell != totalOwned {
+		t.Errorf("Should have held/sold %d but held/sold %d", totalOwned, sold.Hold+sold.Sell)
+	}
+
+	if sold.Hold == 0 {
+		t.Error("Should have at least one stock held, but have 0")
+	}
+
+	if sold.Sell == 0 {
+		t.Error("Should have at least one stock sold, but have 0")
+	}
+}
