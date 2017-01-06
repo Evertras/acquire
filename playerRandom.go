@@ -80,11 +80,6 @@ func (p *PlayerRandom) Create(g *Game, triggeringPiece Piece) Hotel {
 	return g.AvailableChains[p.r.Intn(len(g.AvailableChains))]
 }
 
-// Draw will draw a piece from the piece bag and hold it
-func (p *PlayerRandom) Draw(g *Game) {
-	p.piecesHeld = append(p.piecesHeld, g.PieceBag.Draw())
-}
-
 // PlayTile selects a random held tile to play
 func (p *PlayerRandom) PlayTile(g *Game) Piece {
 	l := len(p.piecesHeld)
@@ -112,4 +107,9 @@ func (p *PlayerRandom) Sell(g *Game, defunct Hotel, acquiredBy Hotel) SellInfo {
 // GiveStocks gives the specified count of stocks to the player
 func (p *PlayerRandom) GiveStocks(h Hotel, count int) {
 	p.stocksOwned[h] += count
+}
+
+// AddPiece adds a piece to the player's current held collection
+func (p *PlayerRandom) AddPiece(piece Piece) {
+	p.piecesHeld = append(p.piecesHeld, piece)
 }

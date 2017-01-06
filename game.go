@@ -57,7 +57,8 @@ func NewGame(r *rand.Rand, players []Player) *Game {
 
 	for _, p := range players {
 		for i := 0; i < StartingPieces; i++ {
-			p.Draw(g)
+			drawn := g.PieceBag.Draw()
+			p.AddPiece(drawn)
 		}
 	}
 

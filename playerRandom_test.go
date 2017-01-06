@@ -198,7 +198,7 @@ func TestPlayerRandomDrawsUniqueTiles(t *testing.T) {
 		drawCount := 10
 
 		for j := 0; j < drawCount; j++ {
-			p.Draw(g)
+			p.AddPiece(g.PieceBag.Draw())
 		}
 
 		if len(p.piecesHeld) != drawCount {
