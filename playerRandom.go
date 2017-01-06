@@ -101,15 +101,9 @@ func (p *PlayerRandom) Sell(g *Game, defunct Hotel, acquiredBy Hotel) SellInfo {
 
 	owned := p.stocksOwned[defunct]
 
-	for i := 0; i < owned; i++ {
-		choice := p.r.Intn(2)
-
-		switch choice {
-		case 0:
-			s.Hold++
-		case 1:
-			s.Sell++
-		}
+	if owned > 0 {
+		s.Hold = p.r.Intn(owned)
+		s.Sell = owned - s.Hold
 	}
 
 	return s
