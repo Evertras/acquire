@@ -1,6 +1,9 @@
 package acquire
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestStateCreatePicksFromAvailableHotels(t *testing.T) {
 	r, p := genGameParams()
@@ -61,5 +64,22 @@ func TestStateCreateDoesNotGiveStockWhenNoneAvailable(t *testing.T) {
 
 	if stocksOwned := p[0].GetStocks()[createdHotel]; stocksOwned != 0 {
 		t.Errorf("Should have 0 stock, but have %d", stocksOwned)
+	}
+}
+
+func TestStateCreateGoesToStateBuy(t *testing.T) {
+	r, p := genGameParams()
+
+	g := NewGame(r, p)
+
+	g.Board.Tiles[0][0] = HotelNeutral
+	g.State = NewStateCreate(&p[0], Piece{0, 1})
+
+	nextState := g.State.Do(g)
+
+	stateName := reflect.TypeOf(nextState).Name()
+
+	if stateName != "StateBuy" {
+		t.Errorf("Should have gone to StateBuy, but have %s", stateName)
 	}
 }

@@ -22,5 +22,5 @@ func (s StateCreate) Do(g *Game) State {
 		(*s.ActivePlayer).GiveStocks(selected, 1)
 	}
 
-	return nil
+	return NewStateBuy()
 }
