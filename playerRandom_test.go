@@ -161,10 +161,20 @@ func TestPlayerRandomCreate(t *testing.T) {
 
 	g.AvailableChains = []Hotel{HotelAmerican, HotelLuxor}
 
-	created := p.Create(g, 3, 3)
+	created := p.Create(g, Piece{3, 3})
 
 	if created != HotelAmerican && created != HotelLuxor {
 		t.Errorf("Somehow created a hotel chain that wasn't available: %c", GetHotelInitial(created))
+	}
+}
+
+func TestPlayerRandomGiveStocks(t *testing.T) {
+	p := NewPlayerRandom(rand.New(rand.NewSource(0)))
+
+	p.GiveStocks(HotelLuxor, 2)
+
+	if p.stocksOwned[HotelLuxor] != 2 {
+		t.Errorf("Should have 2 stocks, but have %d", p.stocksOwned[HotelLuxor])
 	}
 }
 

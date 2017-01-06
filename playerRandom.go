@@ -75,7 +75,7 @@ func (p *PlayerRandom) Merge(g *Game, choices []Hotel) Hotel {
 }
 
 // Create randomly picks an available hotel chain and creates it
-func (p *PlayerRandom) Create(g *Game, rowPlayed int, colPlayed int) Hotel {
+func (p *PlayerRandom) Create(g *Game, triggeringPiece Piece) Hotel {
 	// assume there is at least one available to have gotten here
 	return g.AvailableChains[p.r.Intn(len(g.AvailableChains))]
 }
@@ -113,4 +113,9 @@ func (p *PlayerRandom) Sell(g *Game, defunct Hotel, acquiredBy Hotel) SellInfo {
 	}
 
 	return s
+}
+
+// GiveStocks gives the specified count of stocks to the player
+func (p *PlayerRandom) GiveStocks(h Hotel, count int) {
+	p.stocksOwned[h] += count
 }

@@ -62,3 +62,25 @@ func TestBoardGetNeighbors(t *testing.T) {
 		t.Errorf("Unexpected number of neighbors in corner: %d (should be 2)", len(cornerNeighbors))
 	}
 }
+
+func TestBoardFillFull(t *testing.T) {
+	b := NewBoard()
+
+	for i := 0; i < BoardHeight; i++ {
+		for j := 0; j < BoardWidth; j++ {
+			b.Tiles[i][j] = HotelNeutral
+		}
+	}
+
+	filledWith := HotelLuxor
+
+	b.Fill(Piece{3, 3}, filledWith)
+
+	for i := 0; i < BoardHeight; i++ {
+		for j := 0; j < BoardWidth; j++ {
+			if b.Tiles[i][j] != filledWith {
+				t.Errorf("Tile (%d,%d) should be %d, is %d", i, j, filledWith, b.Tiles[i][j])
+			}
+		}
+	}
+}

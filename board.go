@@ -66,3 +66,32 @@ func (b *Board) GetNeighbors(p Piece) []Piece {
 
 	return n
 }
+
+// Fill will flood fill the board with the given hotel
+func (b *Board) Fill(origin Piece, fillWith Hotel) {
+	b.Tiles[origin.Row][origin.Col] = fillWith
+
+	pieces := make([]Piece, 4)[:]
+
+	if origin.Row > 0 {
+		pieces = append(pieces, Piece{origin.Row - 1, origin.Col})
+	}
+
+	if origin.Row < BoardHeight-1 {
+		pieces = append(pieces, Piece{origin.Row + 1, origin.Col})
+	}
+
+	if origin.Col > 0 {
+		pieces = append(pieces, Piece{origin.Row, origin.Col - 1})
+	}
+
+	if origin.Col < BoardWidth-1 {
+		pieces = append(pieces, Piece{origin.Row, origin.Col + 1})
+	}
+
+	for _, p := range pieces {
+		if h := b.Tiles[p.Row][p.Col]; h != HotelEmpty && h != fillWith {
+			b.Fill(p, fillWith)
+		}
+	}
+}

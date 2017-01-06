@@ -15,7 +15,7 @@ type Player interface {
 	BuyStocks(g *Game) []Hotel
 	Merge(g *Game, choices []Hotel) Hotel
 	Sell(g *Game, defunct Hotel, acquiredBy Hotel) SellInfo
-	Create(g *Game, rowPlayed int, colPlayed int) Hotel
+	Create(g *Game, triggeringPiece Piece) Hotel
 	Draw(g *Game)
 
 	// Funds
@@ -24,4 +24,5 @@ type Player interface {
 
 	// Stocks the Player owns
 	GetStocks() [HotelSize]int
+	GiveStocks(h Hotel, count int)
 }
