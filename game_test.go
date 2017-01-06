@@ -37,7 +37,7 @@ func TestNewGame(t *testing.T) {
 	targetPieces := BoardWidth*BoardHeight - 6*numPlayers
 
 	if g.PieceBag == nil {
-		t.Errorf("Pice bag missing")
+		t.Errorf("Piece bag missing")
 	} else if len(g.PieceBag.Pieces) == BoardWidth*BoardHeight {
 		t.Errorf("Piece bag started full, should have %d pieces but instead has %d", targetPieces, len(g.PieceBag.Pieces))
 	} else if len(g.PieceBag.Pieces) != targetPieces {
