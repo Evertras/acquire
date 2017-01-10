@@ -27,11 +27,11 @@ func TestStateEndTurnResetsToFirstPlayer(t *testing.T) {
 	players := []Player{p1, p2}
 	g := NewGame(r, players)
 	s := NewStateEndTurn()
-	g.CurrentPlayerIndex = 1
+	g.CurrentPlayerIndex = len(players) - 1
 
 	s.Do(g)
 
-	if g.CurrentPlayerIndex != 1 {
+	if g.CurrentPlayerIndex != 0 {
 		t.Errorf("Should have reset to index 0, but have index %d", g.CurrentPlayerIndex)
 	}
 }
