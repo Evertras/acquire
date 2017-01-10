@@ -16,5 +16,5 @@ func (s StateEndTurn) Do(g *Game) State {
 	} else {
 		g.CurrentPlayerIndex++
 	}
-	return NewStateBuy()
+	return NewStatePlayTile(&g.Players[g.CurrentPlayerIndex])
 }

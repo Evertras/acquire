@@ -52,7 +52,7 @@ func (b *Board) GetNeighbors(p Piece) []Piece {
 		n = append(n, Piece{Row: p.Row, Col: p.Col - 1})
 	}
 
-	if p.Col < BoardWidth {
+	if p.Col < BoardWidth-1 {
 		n = append(n, Piece{Row: p.Row, Col: p.Col + 1})
 	}
 
@@ -60,7 +60,7 @@ func (b *Board) GetNeighbors(p Piece) []Piece {
 		n = append(n, Piece{Row: p.Row - 1, Col: p.Col})
 	}
 
-	if p.Row < BoardHeight {
+	if p.Row < BoardHeight-1 {
 		n = append(n, Piece{Row: p.Row + 1, Col: p.Col})
 	}
 

@@ -44,21 +44,39 @@ func TestPrintEmptyBoard(t *testing.T) {
 func TestBoardGetNeighbors(t *testing.T) {
 	b := NewBoard()
 
-	middleNeighbors := b.GetNeighbors(Piece{BoardHeight / 2, BoardWidth / 2})
-
-	if len(middleNeighbors) != 4 {
+	if middleNeighbors := b.GetNeighbors(Piece{BoardHeight / 2, BoardWidth / 2}); len(middleNeighbors) != 4 {
 		t.Errorf("Unexpected number of neighbors in middle: %d (should be 4)", len(middleNeighbors))
 	}
 
-	sideNeighbors := b.GetNeighbors(Piece{0, BoardWidth / 2})
-
-	if len(sideNeighbors) != 3 {
-		t.Errorf("Unexpected number of neighbors on side: %d (should be 3)", len(sideNeighbors))
+	sidePieces := []struct {
+		name  string
+		piece Piece
+	}{
+		{
+			"top",
+			Piece{0, BoardWidth / 2},
+		},
+		{
+			"right",
+			Piece{BoardHeight / 2, BoardWidth - 1},
+		},
+		{
+			"bottom",
+			Piece{BoardHeight - 1, BoardWidth / 2},
+		},
+		{
+			"left",
+			Piece{BoardHeight / 2, 0},
+		},
 	}
 
-	cornerNeighbors := b.GetNeighbors(Piece{0, 0})
+	for _, pieces := range sidePieces {
+		if neighbors := b.GetNeighbors(pieces.piece); len(neighbors) != 3 {
+			t.Errorf("Unexpected number of neighbors at %s: %d (should be 3)", pieces.name, len(neighbors))
+		}
+	}
 
-	if len(cornerNeighbors) != 2 {
+	if cornerNeighbors := b.GetNeighbors(Piece{0, 0}); len(cornerNeighbors) != 2 {
 		t.Errorf("Unexpected number of neighbors in corner: %d (should be 2)", len(cornerNeighbors))
 	}
 }
