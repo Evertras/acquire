@@ -1,16 +1,9 @@
 package acquire
 
 import (
-	"math/rand"
 	"reflect"
 	"testing"
 )
-
-func genGameParams() (r *rand.Rand, players []Player) {
-	r = rand.New(rand.NewSource(0))
-	players = []Player{NewPlayerRandom(r)}
-	return
-}
 
 func TestNewGame(t *testing.T) {
 	r, players := genGameParams()

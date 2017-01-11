@@ -1,16 +1,9 @@
 package acquire
 
 import (
-	"math/rand"
 	"reflect"
 	"testing"
 )
-
-func _genTestGame() (*Game, *PlayerRandom) {
-	r := rand.New(rand.NewSource(0))
-	p1 := NewPlayerRandom(r)
-	return NewGame(r, []Player{p1}), p1
-}
 
 func TestStatePlayTilePlacesNeutralTile(t *testing.T) {
 	var state State

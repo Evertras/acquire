@@ -5,16 +5,6 @@ import (
 	"testing"
 )
 
-func countTiles(c *PieceCollection) [BoardHeight][BoardWidth]int {
-	var tileCount [BoardHeight][BoardWidth]int
-
-	for _, p := range c.Pieces {
-		tileCount[p.Row][p.Col]++
-	}
-
-	return tileCount
-}
-
 func TestNewPieceCollection(t *testing.T) {
 	r := rand.New(rand.NewSource(0))
 	c := NewPieceCollection(r)
