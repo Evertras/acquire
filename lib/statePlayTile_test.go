@@ -61,6 +61,7 @@ func TestStatePlayTileExpandsHotel(t *testing.T) {
 	g, p := _genTestGame()
 
 	g.Board.Tiles[0][0] = HotelLuxor
+	g.CurrentChainSizes[HotelLuxor] = 1
 
 	p.piecesHeld = []Piece{Piece{0, 1}}
 
@@ -72,6 +73,40 @@ func TestStatePlayTileExpandsHotel(t *testing.T) {
 		t.Error("Somehow turned the corner tile into something else")
 	} else if g.Board.Tiles[0][1] != HotelLuxor {
 		t.Error("Did not expand Luxor as expected")
+	}
+
+	if g.CurrentChainSizes[HotelLuxor] != 2 {
+		t.Errorf("Current chain size should be 2, but is instead %d", g.CurrentChainSizes[HotelLuxor])
+	}
+}
+
+func TestStatePlayTileExpandsHotelIntoNeutralChain(t *testing.T) {
+	g, p := _genTestGame()
+
+	g.Board.Tiles[0][0] = HotelLuxor
+	g.Board.Tiles[0][2] = HotelNeutral
+	g.Board.Tiles[0][3] = HotelNeutral
+	g.Board.Tiles[0][4] = HotelNeutral
+	g.CurrentChainSizes[HotelLuxor] = 1
+
+	p.piecesHeld = []Piece{Piece{0, 1}}
+
+	state := NewStatePlayTile(&g.Players[0])
+
+	state.Do(g)
+
+	if g.Board.Tiles[0][0] != HotelLuxor {
+		t.Error("Somehow turned the corner tile into something else")
+	} else {
+		for i := 0; i < 5; i++ {
+			if g.Board.Tiles[0][i] != HotelLuxor {
+				t.Errorf("Board at 0,%d should be %d, but is %d", i, HotelLuxor, g.Board.Tiles[0][i])
+			}
+		}
+	}
+
+	if g.CurrentChainSizes[HotelLuxor] != 5 {
+		t.Errorf("Current chain size should be 5, but is instead %d", g.CurrentChainSizes[HotelLuxor])
 	}
 }
 

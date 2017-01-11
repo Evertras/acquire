@@ -92,7 +92,11 @@ func TestBoardFillFull(t *testing.T) {
 
 	filledWith := HotelLuxor
 
-	b.Fill(Piece{3, 3}, filledWith)
+	fillCount := b.Fill(Piece{3, 3}, filledWith)
+
+	if fillCount != BoardWidth*BoardHeight {
+		t.Errorf("Should have filled %d, but filled %d", BoardWidth*BoardHeight, fillCount)
+	}
 
 	for i := 0; i < BoardHeight; i++ {
 		for j := 0; j < BoardWidth; j++ {
@@ -100,5 +104,38 @@ func TestBoardFillFull(t *testing.T) {
 				t.Errorf("Tile (%d,%d) should be %d, is %d", i, j, filledWith, b.Tiles[i][j])
 			}
 		}
+	}
+}
+
+func TestBoardFillSandwich(t *testing.T) {
+	b := NewBoard()
+
+	b.Tiles[0][0] = HotelNeutral
+	b.Tiles[0][1] = HotelNeutral
+	b.Tiles[0][3] = HotelNeutral
+	b.Tiles[0][4] = HotelNeutral
+
+	filledWith := HotelLuxor
+
+	fillCount := b.Fill(Piece{0, 2}, filledWith)
+
+	if fillCount != 5 {
+		t.Errorf("Should have filled 5, but filled %d", fillCount)
+	}
+}
+
+func TestBoardFillExpanded(t *testing.T) {
+	b := NewBoard()
+	filledWith := HotelLuxor
+
+	b.Tiles[0][0] = filledWith
+	b.Tiles[0][1] = filledWith
+	b.Tiles[0][3] = HotelAmerican
+	b.Tiles[0][4] = HotelAmerican
+
+	fillCount := b.Fill(Piece{0, 2}, filledWith)
+
+	if fillCount != 3 {
+		t.Errorf("Should have filled 3, but filled %d", fillCount)
 	}
 }

@@ -26,16 +26,23 @@ func (s StatePlayTile) Do(g *Game) State {
 			if !isNeighboring[h] {
 				isNeighboring[h] = true
 				uniqueNeighbors++
-				fillType = h
+
+				if h != HotelNeutral {
+					fillType = h
+				}
 			}
 		}
 	}
 
-	if uniqueNeighbors > 1 {
-		return NewStateMerge()
+	if uniqueNeighbors > 1 && !(uniqueNeighbors == 2 && isNeighboring[HotelNeutral]) {
+		return NewStateMerge(p)
 	}
 
-	g.Board.Tiles[p.Row][p.Col] = fillType
+	fillCount := g.Board.Fill(p, fillType)
+
+	if fillType != HotelNeutral {
+		g.CurrentChainSizes[fillType] += fillCount
+	}
 
 	if uniqueNeighbors == 1 && fillType == HotelNeutral {
 		return NewStateCreate(s.ActivePlayer, p)
