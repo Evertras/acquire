@@ -49,34 +49,6 @@ func TestPlayerRandomStartsWithNoStocksOwned(t *testing.T) {
 	}
 }
 
-func TestPlayerRandomBuyStock(t *testing.T) {
-	p := NewPlayerRandom(rand.New(rand.NewSource(0)))
-	g := &Game{}
-
-	hotel := HotelLuxor
-	startingStockCount := 5
-	ownedBefore := p.stocksOwned[hotel]
-
-	g.AvailableStocks[hotel] = startingStockCount
-	g.CurrentChainSizes[hotel] = 2
-
-	bought := p.BuyStocks(g)
-
-	ownedAfter := p.stocksOwned[hotel]
-
-	if len(bought) != BuyStocksPerTurn {
-		t.Errorf("Expected to buy %d, instead bought %d", BuyStocksPerTurn, len(bought))
-	}
-
-	if ownedBefore != 0 {
-		t.Errorf("Started with %d stocks, should have zero", ownedBefore)
-	}
-
-	if ownedAfter != len(bought) {
-		t.Errorf("Expected to own %d stocks but instead own %d", len(bought), ownedAfter)
-	}
-}
-
 func TestPlayerRandomBuyStockRespectsFunds(t *testing.T) {
 	p := NewPlayerRandom(rand.New(rand.NewSource(0)))
 	g := &Game{}

@@ -60,7 +60,6 @@ func (p *PlayerRandom) BuyStocks(g *Game) []Hotel {
 			choice := available[p.r.Intn(l)]
 
 			funds -= prices[choice]
-			p.stocksOwned[choice]++
 
 			startingAvailable[choice]--
 

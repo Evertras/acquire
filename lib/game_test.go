@@ -1,6 +1,7 @@
 package acquire
 
 import (
+	"math/rand"
 	"reflect"
 	"testing"
 )
@@ -49,6 +50,45 @@ func TestNewGame(t *testing.T) {
 	for h, s := range g.CurrentChainSizes {
 		if s != 0 {
 			t.Errorf("Unexpected chain size of %d for hotel %d, should be 0", s, h)
+		}
+	}
+}
+
+func BenchmarkPlayGame(b *testing.B) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	p2 := NewPlayerRandom(r)
+
+	g := NewGame(r, []Player{p1, p2})
+
+	for len(g.PieceBag.Pieces) > 3 {
+		g.Advance()
+	}
+}
+
+func TestGameStocksAlwaysStableCount(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	p2 := NewPlayerRandom(r)
+
+	g := NewGame(r, []Player{p1, p2})
+
+	for i := 0; i < 10000; i++ {
+		for len(g.PieceBag.Pieces) > 3 {
+			g.Advance()
+
+			for h := HotelFirst; h < HotelLast; h++ {
+				totalStocks := g.AvailableStocks[h] + p1.GetStocks()[h] + p2.GetStocks()[h]
+
+				if totalStocks != StartingStocks {
+					t.Errorf("Stocks for %c have improper total", GetHotelInitial(h))
+					t.Error(reflect.TypeOf(g.State).Name())
+					t.Error(g.AvailableStocks)
+					t.Error(p1.stocksOwned)
+					t.Error(p2.stocksOwned)
+					t.FailNow()
+				}
+			}
 		}
 	}
 }
