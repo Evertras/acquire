@@ -54,7 +54,6 @@ func TestPlayerRandomBuyStock(t *testing.T) {
 	g := &Game{}
 
 	hotel := HotelLuxor
-	expectedPricePer := 200
 	startingStockCount := 5
 	ownedBefore := p.stocksOwned[hotel]
 
@@ -67,12 +66,6 @@ func TestPlayerRandomBuyStock(t *testing.T) {
 
 	if len(bought) != BuyStocksPerTurn {
 		t.Errorf("Expected to buy %d, instead bought %d", BuyStocksPerTurn, len(bought))
-	}
-
-	expectedFunds := StartingMoney - expectedPricePer*BuyStocksPerTurn
-
-	if p.funds != expectedFunds {
-		t.Errorf("Expected funds of %d, but had %d after purchase", expectedFunds, p.funds)
 	}
 
 	if ownedBefore != 0 {
@@ -101,12 +94,6 @@ func TestPlayerRandomBuyStockRespectsFunds(t *testing.T) {
 
 	if len(bought) != 2 {
 		t.Errorf("Expected to buy 2 stocks, but instead bought %d", len(bought))
-	}
-
-	expectedFunds := 0
-
-	if p.funds != expectedFunds {
-		t.Errorf("Expected player to have %d funds, but instead has %d", expectedFunds, p.funds)
 	}
 }
 

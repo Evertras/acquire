@@ -34,6 +34,7 @@ func (p *PlayerRandom) GetStocks() [HotelSize]int {
 func (p *PlayerRandom) BuyStocks(g *Game) []Hotel {
 	bought := []Hotel{}
 	startingAvailable := make([]int, HotelSize)
+	funds := p.funds
 
 	copy(startingAvailable, g.AvailableStocks[:])
 
@@ -45,7 +46,7 @@ func (p *PlayerRandom) BuyStocks(g *Game) []Hotel {
 			if s > 0 {
 				prices[h] = g.GetWorth(Hotel(h)).PricePerStock
 
-				if prices[h] <= p.funds {
+				if prices[h] <= funds {
 					available = append(available, Hotel(h))
 				}
 			}
@@ -56,7 +57,7 @@ func (p *PlayerRandom) BuyStocks(g *Game) []Hotel {
 		if l > 0 {
 			choice := available[p.r.Intn(l)]
 
-			p.funds -= prices[choice]
+			funds -= prices[choice]
 			p.stocksOwned[choice]++
 
 			startingAvailable[choice]--

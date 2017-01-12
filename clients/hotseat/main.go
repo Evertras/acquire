@@ -17,7 +17,7 @@ func main() {
 
 	curPlayer := -1
 
-	for {
+	for len(g.PieceBag.Pieces) > 3 {
 		if curPlayer != g.CurrentPlayerIndex {
 			curPlayer = g.CurrentPlayerIndex
 			fmt.Printf("Player %d\n", g.CurrentPlayerIndex+1)
@@ -25,5 +25,9 @@ func main() {
 		}
 
 		g.Advance()
+	}
+
+	for i, p := range players {
+		fmt.Printf("Player %d - $%d\n", i, p.GetFunds())
 	}
 }
