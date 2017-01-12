@@ -15,9 +15,15 @@ func main() {
 
 	g := acquire.NewGame(r, players)
 
+	curPlayer := -1
+
 	for {
-		fmt.Printf("Player %d\n", g.CurrentPlayerIndex+1)
-		g.Board.PrintBoard(os.Stdout)
+		if curPlayer != g.CurrentPlayerIndex {
+			curPlayer = g.CurrentPlayerIndex
+			fmt.Printf("Player %d\n", g.CurrentPlayerIndex+1)
+			g.Board.PrintBoard(os.Stdout)
+		}
+
 		g.Advance()
 	}
 }

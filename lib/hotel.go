@@ -40,7 +40,7 @@ const (
 
 	// HotelLast is the last numerical constant of an actual hotel chain,
 	// useful in for loops
-	HotelLast = HotelContinental
+	HotelLast = HotelContinental + 1
 
 	// HotelCount is how many actual hotels there are
 	HotelCount = 7

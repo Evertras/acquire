@@ -62,5 +62,5 @@ func (s StateMerge) Do(g *Game) State {
 
 	g.CurrentChainSizes[winner] += grewBy
 
-	return nil
+	return NewStateSell(defunctValues, winner)
 }

@@ -44,7 +44,7 @@ func (s StatePlayTile) Do(g *Game) State {
 		g.CurrentChainSizes[fillType] += fillCount
 	}
 
-	if uniqueNeighbors == 1 && fillType == HotelNeutral {
+	if uniqueNeighbors == 1 && fillType == HotelNeutral && len(g.AvailableChains) > 0 {
 		return NewStateCreate(s.ActivePlayer, p)
 	}
 

@@ -26,6 +26,29 @@ func TestStateCreatePicksFromAvailableHotels(t *testing.T) {
 	if g.Board.Tiles[0][1] != createdHotel {
 		t.Error("Did not turn placed piece into HotelLuxor")
 	}
+
+	if len(g.AvailableChains) != 0 {
+		t.Error("HotelLuxor still available, should have no remaining chains")
+	}
+}
+
+func TestStateCreateRemovedChosenFromAvailable(t *testing.T) {
+	for i := 0; i < 1000; i++ {
+		r, p := genGameParams()
+
+		g := NewGame(r, p)
+
+		g.Board.Tiles[0][0] = HotelNeutral
+
+		g.AvailableChains = []Hotel{HotelAmerican, HotelLuxor}
+		g.State = NewStateCreate(&p[0], Piece{0, 1})
+
+		g.State.Do(g)
+
+		if len(g.AvailableChains) != 1 || g.AvailableChains[0] == g.Board.Tiles[0][0] {
+			t.Error("Did not remove selected hotel")
+		}
+	}
 }
 
 func TestStateCreateGivesFreeStock(t *testing.T) {
