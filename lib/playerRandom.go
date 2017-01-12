@@ -1,6 +1,8 @@
 package acquire
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 // PlayerRandom just randomly chooses anything it can
 type PlayerRandom struct {

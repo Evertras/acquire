@@ -102,7 +102,7 @@ func TestPlayerRandomBuyStockRespectsAvailableCount(t *testing.T) {
 	g := &Game{}
 
 	hotel := HotelLuxor
-	startingStockCount := 2
+	startingStockCount := 1
 
 	g.AvailableStocks[hotel] = startingStockCount
 	g.CurrentChainSizes[hotel] = 2
