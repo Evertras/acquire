@@ -62,7 +62,7 @@ func BenchmarkPlayGame(b *testing.B) {
 
 	g := NewGame(r, []Player{p1, p2})
 
-	for len(g.PieceBag.Pieces) > 3 {
+	for g.State != nil {
 		g.Advance()
 	}
 }
