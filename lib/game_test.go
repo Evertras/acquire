@@ -2,6 +2,7 @@ package acquire
 
 import (
 	"math/rand"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -90,5 +91,151 @@ func TestGameStocksAlwaysStableCount(t *testing.T) {
 				}
 			}
 		}
+	}
+}
+
+func TestGamePlacementValidOnEmptyBoard(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	for row := 0; row < BoardHeight; row++ {
+		for col := 0; col < BoardWidth; col++ {
+			if !g.IsValidPlacement(Piece{row, col}) {
+				t.Errorf("Piece at %d,%d should be valid", row, col)
+			}
+		}
+	}
+}
+
+func TestGameExistingHotelMakesInvalidPlacement(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	for row := 0; row < BoardHeight; row++ {
+		for col := 0; col < BoardWidth; col++ {
+			// Overkill, but hey, why not
+			for h := HotelFirst; h < HotelLast; h++ {
+				p := Piece{row, col}
+				g.Board.Tiles[row][col] = h
+				if g.IsValidPlacement(p) {
+					t.Errorf("Piece at %d,%d should not be valid while taken up by %c", row, col, GetHotelInitial(h))
+				}
+			}
+		}
+	}
+}
+
+func TestGamePieceThatWouldMergeTwoBigChainsIsInvalid(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+
+	g := NewGame(r, []Player{p1})
+
+	g.Board.Tiles[0][0] = HotelLuxor
+	g.Board.Tiles[0][2] = HotelAmerican
+
+	triggerPiece := Piece{0, 1}
+
+	// Cheating, the pieces don't exist but this is enough to check
+	g.CurrentChainSizes[HotelLuxor] = 10
+	g.CurrentChainSizes[HotelAmerican] = 10
+
+	if !g.IsValidPlacement(triggerPiece) {
+		t.Error("Should be valid to join two hotel chains with size 10")
+	}
+
+	g.CurrentChainSizes[HotelLuxor] = 11
+	g.CurrentChainSizes[HotelAmerican] = 11
+
+	if g.IsValidPlacement(triggerPiece) {
+		t.Error("Should not be valid to join two giant hotel chains at size 11")
+	}
+}
+
+func TestGameCanGrowBigChain(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	g.Board.Tiles[0][0] = HotelLuxor
+	// Cheat about how big it is
+	g.CurrentChainSizes[HotelLuxor] = 20
+
+	if !g.IsValidPlacement(Piece{0, 1}) {
+		t.Error("Should be able to place tile at 0,1")
+	}
+}
+
+func BenchmarkCanPlaceSomewhere(b *testing.B) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	b.ResetTimer()
+
+	g.CanPlaceSomewhere()
+}
+
+func TestGameCanPlaceAtStart(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	if !g.CanPlaceSomewhere() {
+		t.Error("Should be able to place somewhere at the start of the match")
+	}
+}
+
+func TestGameCanPlaceWhenBigHotelsCanStillGrow(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	for row := 0; row < BoardHeight; row++ {
+		for col := 0; col < 4; col++ {
+			g.Board.Tiles[row][col] = HotelLuxor
+			g.CurrentChainSizes[HotelLuxor]++
+		}
+
+		// Leave a 2 wide gutter in between, can technically place in either side
+		for col := 6; col < BoardWidth; col++ {
+			g.Board.Tiles[row][col] = HotelAmerican
+			g.CurrentChainSizes[HotelAmerican]++
+		}
+	}
+
+	if !g.CanPlaceSomewhere() {
+		g.Board.PrintBoard(os.Stdout)
+		t.Error("Should be able to place on board")
+	}
+}
+
+func TestGameCannotPlaceWhenBigHotelsOnlyOneApart(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	for row := 0; row < BoardHeight; row++ {
+		for col := 0; col < 4; col++ {
+			g.Board.Tiles[row][col] = HotelLuxor
+			g.CurrentChainSizes[HotelLuxor]++
+		}
+
+		// Leave a 1 wide gutter in between, can't place in gutter now
+		for col := 5; col < BoardWidth; col++ {
+			g.Board.Tiles[row][col] = HotelAmerican
+			g.CurrentChainSizes[HotelAmerican]++
+		}
+	}
+
+	if g.Board.Tiles[0][4] != HotelEmpty {
+		t.Error("0,4 should be empty but isn't, test isn't set up right")
+	}
+
+	if g.CanPlaceSomewhere() {
+		g.Board.PrintBoard(os.Stdout)
+		t.Error("Shouldn't be able to place on board")
 	}
 }

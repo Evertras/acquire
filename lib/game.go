@@ -77,3 +77,45 @@ func (g *Game) GetWorth(h Hotel) HotelWorth {
 func (g *Game) Advance() {
 	g.State = g.State.Do(g)
 }
+
+// IsValidPlacement checks if a given piece is a valid placement, returning
+// true if a piece can be placed there and false if not
+func (g *Game) IsValidPlacement(p Piece) bool {
+	// Must be empty
+	if g.Board.Tiles[p.Row][p.Col] != HotelEmpty {
+		return false
+	}
+
+	// If it would cause a merge, only one participating hotel chain can be
+	// 11+ in size
+	neighbors := g.Board.GetNeighbors(p)
+	alreadySaw := HotelEmpty
+	for _, n := range neighbors {
+		h := g.Board.Tiles[n.Row][n.Col]
+		if h != HotelEmpty && h != HotelNeutral {
+			if g.CurrentChainSizes[h] >= 11 {
+				if alreadySaw != HotelEmpty {
+					return false
+				}
+
+				alreadySaw = h
+			}
+		}
+	}
+
+	return true
+}
+
+// CanPlaceSomewhere returns true if there is still an empty tile on the board
+// where a piece can be played, false if there are no valid plays left
+func (g *Game) CanPlaceSomewhere() bool {
+	for row := 0; row < BoardHeight; row++ {
+		for col := 0; col < BoardWidth; col++ {
+			if g.IsValidPlacement(Piece{row, col}) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
