@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"time"
 
 	acquire "github.com/evertras/acquire/lib"
@@ -16,7 +17,7 @@ func main() {
 
 	curPlayer := -1
 
-	for len(g.PieceBag.Pieces) > 3 {
+	for g.State != nil {
 		if curPlayer != g.CurrentPlayerIndex {
 			curPlayer = g.CurrentPlayerIndex
 			//fmt.Printf("Player %d\n", g.CurrentPlayerIndex+1)
@@ -26,9 +27,8 @@ func main() {
 		g.Advance()
 	}
 
+	g.Board.PrintBoard(os.Stdout)
 	for i, p := range players {
 		fmt.Printf("Player %d - $%d\n", i+1, p.GetFunds())
-		fmt.Println(p.GetStocks())
 	}
-	fmt.Println(g.AvailableStocks)
 }

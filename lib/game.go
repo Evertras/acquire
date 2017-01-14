@@ -75,7 +75,9 @@ func (g *Game) GetWorth(h Hotel) HotelWorth {
 // Advance advances the game from its current state, asking its active player
 // for choices depending on the current state
 func (g *Game) Advance() {
-	g.State = g.State.Do(g)
+	if g.State != nil {
+		g.State = g.State.Do(g)
+	}
 }
 
 // IsValidPlacement checks if a given piece is a valid placement, returning

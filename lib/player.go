@@ -19,6 +19,7 @@ type Player interface {
 
 	// Held pieces
 	AddPiece(p Piece)
+	CanPlayPiece(g *Game) bool
 
 	// Funds
 	GetFunds() int

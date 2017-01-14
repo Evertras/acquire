@@ -74,20 +74,22 @@ func TestGameStocksAlwaysStableCount(t *testing.T) {
 
 	g := NewGame(r, []Player{p1, p2})
 
-	for i := 0; i < 10000; i++ {
-		for len(g.PieceBag.Pieces) > 3 {
-			g.Advance()
+	for j := 0; j < 10000; j++ {
+		for i := 0; i < 10000; i++ {
+			for g.State != nil {
+				g.Advance()
 
-			for h := HotelFirst; h < HotelLast; h++ {
-				totalStocks := g.AvailableStocks[h] + p1.GetStocks()[h] + p2.GetStocks()[h]
+				for h := HotelFirst; h < HotelLast; h++ {
+					totalStocks := g.AvailableStocks[h] + p1.GetStocks()[h] + p2.GetStocks()[h]
 
-				if totalStocks != StartingStocks {
-					t.Errorf("Stocks for %c have improper total", GetHotelInitial(h))
-					t.Error(reflect.TypeOf(g.State).Name())
-					t.Error(g.AvailableStocks)
-					t.Error(p1.stocksOwned)
-					t.Error(p2.stocksOwned)
-					t.FailNow()
+					if totalStocks != StartingStocks {
+						t.Errorf("Stocks for %c have improper total", GetHotelInitial(h))
+						t.Error(reflect.TypeOf(g.State).Name())
+						t.Error(g.AvailableStocks)
+						t.Error(p1.stocksOwned)
+						t.Error(p2.stocksOwned)
+						t.FailNow()
+					}
 				}
 			}
 		}
@@ -237,5 +239,34 @@ func TestGameCannotPlaceWhenBigHotelsOnlyOneApart(t *testing.T) {
 	if g.CanPlaceSomewhere() {
 		g.Board.PrintBoard(os.Stdout)
 		t.Error("Shouldn't be able to place on board")
+	}
+}
+
+func TestGameCanPlaceWhenBigHotelWouldEatBigNeutralBlock(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	for row := 0; row < BoardHeight; row++ {
+		for col := 0; col < 4; col++ {
+			g.Board.Tiles[row][col] = HotelLuxor
+			g.CurrentChainSizes[HotelLuxor]++
+		}
+
+		// Leave a 1 wide gutter in between, can't place in gutter now
+		for col := 5; col < BoardWidth; col++ {
+			g.Board.Tiles[row][col] = HotelNeutral
+			// Shouldn't actually do anything, but just to be safe...
+			g.CurrentChainSizes[HotelNeutral]++
+		}
+	}
+
+	if g.Board.Tiles[0][4] != HotelEmpty {
+		t.Error("0,4 should be empty but isn't, test isn't set up right")
+	}
+
+	if !g.CanPlaceSomewhere() {
+		g.Board.PrintBoard(os.Stdout)
+		t.Error("Should be able to place on board")
 	}
 }

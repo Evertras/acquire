@@ -82,13 +82,37 @@ func (p *PlayerRandom) Create(g *Game, triggeringPiece Piece) Hotel {
 	return g.AvailableChains[p.r.Intn(len(g.AvailableChains))]
 }
 
+// CanPlayPiece returns true if the Player has any valid pieces remaining
+func (p *PlayerRandom) CanPlayPiece(g *Game) bool {
+	for _, piece := range p.piecesHeld {
+		if g.IsValidPlacement(piece) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // PlayTile selects a random held tile to play
 func (p *PlayerRandom) PlayTile(g *Game) Piece {
+	validPieces := make([]Piece, StartingPieces)[:0]
+
+	for _, piece := range p.piecesHeld {
+		if g.IsValidPlacement(piece) {
+			validPieces = append(validPieces, piece)
+		}
+	}
+
+	choice := validPieces[p.r.Intn(len(validPieces))]
+
 	l := len(p.piecesHeld)
-	i := p.r.Intn(l)
-	choice := p.piecesHeld[i]
-	p.piecesHeld[i] = p.piecesHeld[l-1]
-	p.piecesHeld = p.piecesHeld[:l-1]
+	for i, held := range p.piecesHeld {
+		if held == choice {
+			p.piecesHeld[i] = p.piecesHeld[l-1]
+			p.piecesHeld = p.piecesHeld[:l-1]
+		}
+	}
+
 	return choice
 }
 
