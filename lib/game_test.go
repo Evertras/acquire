@@ -56,14 +56,16 @@ func TestNewGame(t *testing.T) {
 }
 
 func BenchmarkPlayGame(b *testing.B) {
-	r := rand.New(rand.NewSource(0))
-	p1 := NewPlayerRandom(r)
-	p2 := NewPlayerRandom(r)
+	for i := 0; i < b.N; i++ {
+		r := rand.New(rand.NewSource(0))
+		p1 := NewPlayerRandom(r)
+		p2 := NewPlayerRandom(r)
 
-	g := NewGame(r, []Player{p1, p2})
+		g := NewGame(r, []Player{p1, p2})
 
-	for g.State != nil {
-		g.Advance()
+		for g.State != nil {
+			g.Advance()
+		}
 	}
 }
 
@@ -171,13 +173,13 @@ func TestGameCanGrowBigChain(t *testing.T) {
 }
 
 func BenchmarkCanPlaceSomewhere(b *testing.B) {
-	r := rand.New(rand.NewSource(0))
-	p1 := NewPlayerRandom(r)
-	g := NewGame(r, []Player{p1})
+	for i := 0; i < b.N; i++ {
+		r := rand.New(rand.NewSource(0))
+		p1 := NewPlayerRandom(r)
+		g := NewGame(r, []Player{p1})
 
-	b.ResetTimer()
-
-	g.CanPlaceSomewhere()
+		g.CanPlaceSomewhere()
+	}
 }
 
 func TestGameCanPlaceAtStart(t *testing.T) {

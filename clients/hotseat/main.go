@@ -11,7 +11,13 @@ import (
 
 func main() {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
-	players := []acquire.Player{acquire.NewPlayerRandom(r), acquire.NewPlayerRandom(r)}
+	players := []acquire.Player{
+		acquire.NewPlayerRandom(r),
+		acquire.NewPlayerRandom(r),
+		acquire.NewPlayerRandom(r),
+		acquire.NewPlayerRandom(r),
+		acquire.NewPlayerRandom(r),
+	}
 
 	g := acquire.NewGame(r, players)
 
