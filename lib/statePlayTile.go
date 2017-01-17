@@ -13,6 +13,11 @@ func NewStatePlayTile(activePlayer *Player) StatePlayTile {
 // Do goes through the play tile step for the active player
 func (s StatePlayTile) Do(g *Game) State {
 	activePlayer := g.Players[g.CurrentPlayerIndex]
+
+	if !activePlayer.CanPlayPiece(g) {
+		return NewStateBuy()
+	}
+
 	p := activePlayer.PlayTile(g)
 
 	neighbors := g.Board.GetNeighbors(p)

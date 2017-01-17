@@ -27,13 +27,10 @@ func (s StateEndTurn) Do(g *Game) State {
 
 		cur := g.Players[g.CurrentPlayerIndex]
 
-		if cur.CanPlayPiece(g) {
-			return NewStatePlayTile(&cur)
-		}
-		return NewStateBuy()
+		return NewStatePlayTile(&cur)
 	}
 
 	// This is never reached even by a bajillion random iterations... is this
-	// actually theoretically reachable?  I don't know.  May remove it.
+	// actually even theoretically reachable?  I don't know.  May remove it.
 	return nil
 }
