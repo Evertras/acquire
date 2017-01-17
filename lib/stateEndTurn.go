@@ -18,7 +18,7 @@ func (s StateEndTurn) Do(g *Game) State {
 	for h := HotelFirst; h < HotelLast; h++ {
 		size := g.CurrentChainSizes[h]
 		if size > 40 {
-			return nil
+			return NewStateEndGame()
 		}
 
 		if size > 0 {
@@ -31,7 +31,7 @@ func (s StateEndTurn) Do(g *Game) State {
 	}
 
 	if chainPresent && !someChainStillSmall {
-		return nil
+		return NewStateEndGame()
 	}
 
 	if g.CurrentPlayerIndex == len(g.Players)-1 {

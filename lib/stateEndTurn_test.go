@@ -2,6 +2,7 @@ package acquire
 
 import (
 	"math/rand"
+	"reflect"
 	"testing"
 )
 
@@ -49,9 +50,9 @@ func TestStateEndTurnEndsGameIfTwoChainsAreAt11(t *testing.T) {
 
 	s := NewStateEndTurn()
 
-	next := s.Do(g)
+	next := reflect.TypeOf(s.Do(g)).Name()
 
-	if next != nil {
+	if next != "StateEndGame" {
 		t.Error("Should have ended the game")
 	}
 }
@@ -69,9 +70,9 @@ func TestStateEndTurnContinuesGameWhenOneChainStillSmall(t *testing.T) {
 
 	s := NewStateEndTurn()
 
-	next := s.Do(g)
+	next := reflect.TypeOf(s.Do(g)).Name()
 
-	if next == nil {
+	if next == "StateEndGame" {
 		t.Error("Should not have ended the game")
 	}
 }
