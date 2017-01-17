@@ -72,17 +72,17 @@ type HotelWorth struct {
 }
 
 var hotelWorths = [11]HotelWorth{
-	HotelWorth{200, 2000, 1000},
-	HotelWorth{300, 3000, 1500},
-	HotelWorth{400, 4000, 2000},
-	HotelWorth{500, 5000, 2500},
-	HotelWorth{600, 6000, 3000},
-	HotelWorth{700, 7000, 3500},
-	HotelWorth{800, 8000, 4000},
-	HotelWorth{900, 9000, 4500},
-	HotelWorth{1000, 10000, 5000},
-	HotelWorth{1100, 11000, 5500},
-	HotelWorth{1200, 12000, 6000},
+	{200, 2000, 1000},
+	{300, 3000, 1500},
+	{400, 4000, 2000},
+	{500, 5000, 2500},
+	{600, 6000, 3000},
+	{700, 7000, 3500},
+	{800, 8000, 4000},
+	{900, 9000, 4500},
+	{1000, 10000, 5000},
+	{1100, 11000, 5500},
+	{1200, 12000, 6000},
 }
 
 // GetWorth returns the hotel's worth given its current chain size
