@@ -56,7 +56,7 @@ func TestStatePlayTileExpandsHotel(t *testing.T) {
 	g.Board.Tiles[0][0] = HotelLuxor
 	g.CurrentChainSizes[HotelLuxor] = 1
 
-	p.piecesHeld = []Piece{Piece{0, 1}}
+	p.piecesHeld = []Piece{{0, 1}}
 
 	state := NewStatePlayTile(&g.Players[0])
 
@@ -82,7 +82,7 @@ func TestStatePlayTileExpandsHotelIntoNeutralChain(t *testing.T) {
 	g.Board.Tiles[0][4] = HotelNeutral
 	g.CurrentChainSizes[HotelLuxor] = 1
 
-	p.piecesHeld = []Piece{Piece{0, 1}}
+	p.piecesHeld = []Piece{{0, 1}}
 
 	state := NewStatePlayTile(&g.Players[0])
 
@@ -107,7 +107,7 @@ func TestStatePlayTileCreatesHotelChain(t *testing.T) {
 	g, p := _genTestGame()
 
 	g.Board.Tiles[0][0] = HotelNeutral
-	p.piecesHeld = []Piece{Piece{0, 1}}
+	p.piecesHeld = []Piece{{0, 1}}
 
 	s := NewStatePlayTile(&g.Players[0])
 
@@ -129,7 +129,7 @@ func TestStatePlayTileCreatesHotelChainWhenSandwichedIn(t *testing.T) {
 	g.Board.Tiles[0][0] = HotelNeutral
 	g.Board.Tiles[2][0] = HotelNeutral
 	g.Board.Tiles[1][1] = HotelNeutral
-	p.piecesHeld = []Piece{Piece{0, 1}}
+	p.piecesHeld = []Piece{{0, 1}}
 
 	s := NewStatePlayTile(&g.Players[0])
 
@@ -152,7 +152,7 @@ func TestStatePlayTileTriggersMerge(t *testing.T) {
 	g.Board.Tiles[0][1] = HotelLuxor
 	g.Board.Tiles[2][0] = HotelContinental
 	g.Board.Tiles[2][1] = HotelContinental
-	p.piecesHeld = []Piece{Piece{1, 0}}
+	p.piecesHeld = []Piece{{1, 0}}
 
 	s := NewStatePlayTile(&g.Players[0])
 
