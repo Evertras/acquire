@@ -272,3 +272,18 @@ func TestGameCanPlaceWhenBigHotelWouldEatBigNeutralBlock(t *testing.T) {
 		t.Error("Should be able to place on board")
 	}
 }
+
+func TestGameCannotPlaceWhenCantCreate(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+	p1 := NewPlayerRandom(r)
+	g := NewGame(r, []Player{p1})
+
+	g.Board.Tiles[0][0] = HotelNeutral
+
+	g.AvailableChains = []Hotel{}
+
+	if g.IsValidPlacement(Piece{0, 1}) {
+		g.Board.PrintBoard(os.Stdout)
+		t.Error("Shouldn't be able to place on board")
+	}
+}

@@ -92,17 +92,27 @@ func (g *Game) IsValidPlacement(p Piece) bool {
 	// 11+ in size
 	neighbors := g.Board.GetNeighbors(p)
 	alreadySaw := HotelEmpty
+	sawNeutral := false
 	for _, n := range neighbors {
 		h := g.Board.Tiles[n.Row][n.Col]
-		if h != HotelEmpty && h != HotelNeutral {
-			if g.CurrentChainSizes[h] >= 11 {
-				if alreadySaw != HotelEmpty {
-					return false
-				}
+		if h != HotelEmpty {
+			if h != HotelNeutral {
+				if g.CurrentChainSizes[h] >= 11 {
+					if alreadySaw != HotelEmpty {
+						return false
+					}
 
-				alreadySaw = h
+					alreadySaw = h
+				}
+			} else {
+				sawNeutral = true
 			}
 		}
+	}
+
+	// If it would create a new chain but no chains are available, it's invalid
+	if alreadySaw == HotelEmpty && sawNeutral {
+		return len(g.AvailableChains) > 0
 	}
 
 	return true
