@@ -287,3 +287,55 @@ func TestGameCannotPlaceWhenCantCreate(t *testing.T) {
 		t.Error("Shouldn't be able to place on board")
 	}
 }
+
+func TestGamePlacementEdgeCases(t *testing.T) {
+	cases := []struct {
+		P        Piece
+		NESW     [4]Hotel
+		Sizes    [HotelSize]int
+		CanPlace bool
+	}{
+		{
+			Piece{6, 5},
+			[4]Hotel{HotelNeutral, HotelNeutral, HotelNeutral, HotelFestival},
+			[HotelSize]int{4, 6, 8, 4, 2, 3, 3},
+			true,
+		},
+		{
+			Piece{6, 5},
+			[4]Hotel{HotelNeutral, HotelFestival, HotelAmerican, HotelAmerican},
+			[HotelSize]int{4, 6, 8, 4, 2, 3, 3},
+			true,
+		},
+		{
+			Piece{6, 5},
+			[4]Hotel{HotelFestival, HotelFestival, HotelNeutral, HotelNeutral},
+			[HotelSize]int{4, 6, 8, 4, 2, 3, 3},
+			true,
+		},
+	}
+	r := rand.New(rand.NewSource(0))
+
+	for _, c := range cases {
+		p1 := NewPlayerRandom(r)
+		g := NewGame(r, []Player{p1})
+
+		g.Board.Tiles[c.P.Row-1][c.P.Col] = c.NESW[0]
+		g.Board.Tiles[c.P.Row][c.P.Col+1] = c.NESW[1]
+		g.Board.Tiles[c.P.Row+1][c.P.Col] = c.NESW[2]
+		g.Board.Tiles[c.P.Row][c.P.Col-1] = c.NESW[3]
+
+		for h := HotelFirst; h < HotelLast; h++ {
+			g.CurrentChainSizes[h] = c.Sizes[h]
+		}
+
+		if g.IsValidPlacement(c.P) != c.CanPlace {
+			g.Board.PrintBoard(os.Stdout)
+			if c.CanPlace {
+				t.Error("Should be able to place")
+			} else {
+				t.Error("Should not be able to place")
+			}
+		}
+	}
+}

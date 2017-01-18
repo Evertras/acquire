@@ -52,9 +52,10 @@ func (s StateMerge) Do(g *Game) State {
 	defunctValues := make(map[Hotel]HotelWorth)
 
 	for _, h := range contenders {
-		if h != winner {
+		if _, exists := defunctValues[h]; h != winner && !exists {
 			defunctValues[h] = g.GetWorth(h)
 			g.CurrentChainSizes[h] = 0
+			g.AvailableChains = append(g.AvailableChains, h)
 		}
 	}
 

@@ -89,30 +89,34 @@ func (g *Game) IsValidPlacement(p Piece) bool {
 	}
 
 	// If it would cause a merge, only one participating hotel chain can be
-	// 11+ in size
+	// 11+ in size, and we can't place where we would trigger a create while
+	// no chains are actually available
 	neighbors := g.Board.GetNeighbors(p)
-	alreadySaw := HotelEmpty
-	sawNeutral := false
+	var isNeighboring [HotelSize]bool
+	uniqueNeighbors := make([]Hotel, 4)[:0]
+
 	for _, n := range neighbors {
 		h := g.Board.Tiles[n.Row][n.Col]
 		if h != HotelEmpty {
-			if h != HotelNeutral {
-				if g.CurrentChainSizes[h] >= 11 {
-					if alreadySaw != HotelEmpty {
-						return false
-					}
-
-					alreadySaw = h
-				}
-			} else {
-				sawNeutral = true
+			if !isNeighboring[h] {
+				isNeighboring[h] = true
+				uniqueNeighbors = append(uniqueNeighbors, h)
 			}
 		}
 	}
 
-	// If it would create a new chain but no chains are available, it's invalid
-	if alreadySaw == HotelEmpty && sawNeutral {
+	neighborCount := len(uniqueNeighbors)
+	if neighborCount == 1 && isNeighboring[HotelNeutral] {
 		return len(g.AvailableChains) > 0
+	} else if neighborCount > 1 && !(neighborCount == 2 && isNeighboring[HotelNeutral]) {
+		numSafeChains := 0
+		for _, n := range uniqueNeighbors {
+			if g.CurrentChainSizes[n] > 10 {
+				numSafeChains++
+			}
+		}
+
+		return numSafeChains <= 1
 	}
 
 	return true

@@ -107,9 +107,10 @@ func (p *PlayerRandom) PlayTile(g *Game) Piece {
 
 	l := len(p.piecesHeld)
 	for i, held := range p.piecesHeld {
-		if held == choice {
+		if held.Row == choice.Row && held.Col == choice.Col {
 			p.piecesHeld[i] = p.piecesHeld[l-1]
 			p.piecesHeld = p.piecesHeld[:l-1]
+			break
 		}
 	}
 
@@ -138,4 +139,9 @@ func (p *PlayerRandom) GiveStocks(h Hotel, count int) {
 // AddPiece adds a piece to the player's current held collection
 func (p *PlayerRandom) AddPiece(piece Piece) {
 	p.piecesHeld = append(p.piecesHeld, piece)
+}
+
+// GetPieces returns the held pieces of the player
+func (p *PlayerRandom) GetPieces() []Piece {
+	return p.piecesHeld
 }
